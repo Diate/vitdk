@@ -10,28 +10,29 @@ Những đứa trẻ có điểm xếp hạng cao hơn sẽ nhận được nhi�
 Trả lại số kẹo tối thiểu bạn cần để phân phát kẹo cho trẻ em.
 
 
-class Solution:
-    def candy(self, ratings):
-        n = len(ratings) 
-        candy = [1] * n 
-        # Left to right pass
-        for i in range(1, n):
-            if ratings[i] > ratings[i - 1]:
-                candy[i] = candy[i - 1] + 1
-        # Right to left pass and summing
-        for i in range(n - 2, -1, -1):
-            if ratings[i] > ratings[i + 1]:
-                candy[i] = max(candy[i], candy[i + 1] + 1)
-        # Add the last child's candy
-        ans = sum(candy)
-        return ans
-
-        ratings = [3 4 3 2 3 1]
-        n = 6
-        candy = [1 1 1 1 1 1]
-        candy = [1 2 1 1 2 1]
-        candy = [1 3 2 1 2 1]
-        -> ans = 10
+    class Solution:
+    
+        def candy(self, ratings):
+            n = len(ratings) 
+            candy = [1] * n 
+            # Left to right pass
+            for i in range(1, n):
+                if ratings[i] > ratings[i - 1]:
+                    candy[i] = candy[i - 1] + 1
+            # Right to left pass and summing
+            for i in range(n - 2, -1, -1):
+                if ratings[i] > ratings[i + 1]:
+                    candy[i] = max(candy[i], candy[i + 1] + 1)
+            # Add the last child's candy
+            ans = sum(candy)
+            return ans
+    
+            ratings = [3 4 3 2 3 1]
+            n = 6
+            candy = [1 1 1 1 1 1]
+            candy = [1 2 1 1 2 1]
+            candy = [1 3 2 1 2 1]
+            -> ans = 10
 
 134.Trạm xăng
 
@@ -41,23 +42,23 @@ Bạn có một chiếc ô tô với bình xăng không giới hạn và bạn p
 
 Cho hai mảng số nguyên gas và chi phí, trả về chỉ số của trạm xăng ban đầu nếu bạn có thể đi vòng quanh mạch một lần theo chiều kim đồng hồ, nếu không thì trả về -1. Nếu tồn tại một giải pháp thì nó được đảm bảo là duy nhất.
 
-class Solution {
-    public int canCompleteCircuit(int[] gas, int[] cost) {
-        int n = gas.length;
-        int ans = 0;
-        int s = 0;
-        int start = 0;
-        for(int i = 0; i < n; i++){
-            ans += gas[i] - cost[i];
-            s += gas[i] - cost[i];
-            if(s < 0){
-                s = 0;
-                start = i + 1;
+    class Solution {
+        public int canCompleteCircuit(int[] gas, int[] cost) {
+            int n = gas.length;
+            int ans = 0;
+            int s = 0;
+            int start = 0;
+            for(int i = 0; i < n; i++){
+                ans += gas[i] - cost[i];
+                s += gas[i] - cost[i];
+                if(s < 0){
+                    s = 0;
+                    start = i + 1;
+                }
             }
+            return (ans < 0)?-1: start;
         }
-        return (ans < 0)?-1: start;
     }
-}
 
 
 321.Tạo số lượng tối đa
@@ -69,36 +70,36 @@ Tạo số lượng độ dài tối đa k <= m + n từ các chữ số của h
 Trả về một mảng gồm k chữ số đại diện cho câu trả lời.
 
 
-class Solution:
-    def maxNumber(self, nums1: List[int], nums2: List[int], k: int) -> List[int]:        
-        def merge(n1, n2):
-            res = []
-            while (n1 or n2) :
-                if n1>n2:
-                    res.append(n1[0])
-                    n1 = n1[1:]
-                else:
-                    res.append(n2[0])
-                    n2 = n2[1:]
-            return res
-        def findmax(nums, length):
-            l = []
-            maxpop = len(nums)-length
-            for i in range(len(nums)):
-                while maxpop>0 and len(l) and nums[i]>l[-1]:
-                    l.pop()
-                    maxpop -= 1
-                l.append(nums[i])
-            return l[:length]
-        n1 = len(nums1)
-        n2 = len(nums2)
-        res = [0]*k
-        for i in range(k+1):
-            j = k-i
-            if i>n1 or j>n2:    continue
-            l1 = findmax(nums1, i)
-            l2 = findmax(nums2, j)
-            res = max(res, merge(l1,l2))
+    class Solution:
+        def maxNumber(self, nums1: List[int], nums2: List[int], k: int) -> List[int]:        
+            def merge(n1, n2):
+                res = []
+                while (n1 or n2) :
+                    if n1>n2:
+                        res.append(n1[0])
+                        n1 = n1[1:]
+                    else:
+                        res.append(n2[0])
+                        n2 = n2[1:]
+                return res
+            def findmax(nums, length):
+                l = []
+                maxpop = len(nums)-length
+                for i in range(len(nums)):
+                    while maxpop>0 and len(l) and nums[i]>l[-1]:
+                        l.pop()
+                        maxpop -= 1
+                    l.append(nums[i])
+                return l[:length]
+            n1 = len(nums1)
+            n2 = len(nums2)
+            res = [0]*k
+            for i in range(k+1):
+                j = k-i
+                if i>n1 or j>n2:    continue
+                l1 = findmax(nums1, i)
+                l2 = findmax(nums2, j)
+                res = max(res, merge(l1,l2))
         return res
 
 
@@ -107,20 +108,20 @@ class Solution:
 Given a sorted integer array nums and an integer n, add/patch elements to the array such that any number in the range [1, n] inclusive can be formed by the sum of some elements in the array.
 
 
-class Solution {
-public:
-    int minPatches(vector<int>& nums, int n) {
-        int patches = 0;
-        int index = 0;
-        long long nextSum = 1;
-        while (nextSum <= n) {
-            if (index < nums.size() && nums[index] <= nextSum) {
-                nextSum += nums[index++];
-            } else {
-                nextSum += nextSum;
-                patches++;
+    class Solution {
+    public:
+        int minPatches(vector<int>& nums, int n) {
+            int patches = 0;
+            int index = 0;
+            long long nextSum = 1;
+            while (nextSum <= n) {
+                if (index < nums.size() && nums[index] <= nextSum) {
+                    nextSum += nums[index++];
+                } else {
+                    nextSum += nextSum;
+                    patches++;
+                }
             }
-        }
         return patches;
     }
 };
