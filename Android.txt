@@ -1,1 +1,70 @@
 
+import subprocess
+
+import json
+
+def getpackage():
+    result = subprocess.Popen(
+        ["adb", "shell", "pm", "list", "packages"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE
+    )
+    stdout, stderr = result.communicate()
+    if result.returncode:
+        print("Error listing packages: {}".format(stderr))
+        return []
+    
+    # Decode stdout to handle text properly (Python 2.7 may handle strings as bytes)
+    stdout = stdout.decode('utf-8') if isinstance(stdout, bytes) else stdout
+
+    # Extract package names
+    packages = [line.replace("package:", "").strip() for line in stdout.splitlines()]
+    return packages
+    
+packages = getpackage()
+
+cnt = 1
+data_save = dict()
+for package in packages:
+
+    cmd = 'adb shell dumpsys package ' + package
+    rl = subprocess.check_output(cmd).decode()
+    start = rl.find('android.intent.action.MAIN:')
+    arr_rl = rl[start:]
+    arr_rl = arr_rl.split()
+    flag = 0
+    data = dict()
+    data['package'] = package
+    data['activity'] = 'None'  
+    for i in range(len(arr_rl)):
+        temp = 'None'
+        if 'Activity' in arr_rl[i]:
+            temp = arr_rl[i].split('/')[-1]
+            if temp[0] == '.':
+                temp = package + temp
+            data['activity'] = temp
+            continue
+        
+    data_save[cnt] = data
+    cnt+=1
+with open('data.json', 'w') as f:
+    json.dump(data_save, f)
+    
+with open('data.json', 'r') as openfile:
+ 
+    # Reading from json file
+    json_object = json.load(openfile)
+json_object = json_object.values()
+import time
+for obj in json_object:
+    print(obj['package'])
+    try:
+        cmd = "adb shell am start -n "+obj['package']+'/'+obj['activity']
+        print(cmd)
+        subprocess.check_output(cmd)
+        print(obj['package']+"     :     "+'Done')
+        time.sleep(3)
+    except:
+        continue
+    
+    
